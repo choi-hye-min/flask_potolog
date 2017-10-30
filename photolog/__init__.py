@@ -34,3 +34,23 @@ def create_app(config_filepath='resource/config.cfg'):
     from photolog.photolog_logger import Log
     log_filepath = os.path.join(photolog_app.root_path, photolog_app.config['LOG_FILE_PATH'])
     Log.init(log_filepath=log_filepath)
+
+    # 데이터베이스 처리
+    from photolog.database import DBManager
+    db_filepath = os.path.join(photolog_app.root_path,
+                               photolog_app.config['DB_FILE_PATH'])
+
+    db_url = photolog_app.config['DB_URL'] + db_filepath
+    DBManager.init(db_url, eval(photolog_app.config['DB_LOG_FLAG']))
+    DBManager.init_db()
+
+    # 뷰 함수 모듈은 어플리케이션 객채 생성하고 블루프린트 등록전에
+    # 뷰 함수가 있는 모듈을 임포트해야 해당 뷰 함수들을 인식할수 있음
+    from photolog.controller import login
+    from photolog.controller import photo_show
+    from photolog.controller import photo_upload
+    from photolog.controller import register_user
+    from photolog.controller import twitter
+
+    
+

@@ -1,4 +1,4 @@
-#!/Users/choihyemin/PycharmProjects/flask_potolog/env/bin/python
+#!/Users/choihyemin/PycharmProjects/flask_photolog/env/bin/python
 
 import sys
 import getopt

@@ -28,7 +28,7 @@ def create_app(config_filepath='resource/config.cfg'):
     from photolog.photolog_config import PhotologConfig
     photolog_app.config.from_object(PhotologConfig)
     photolog_app.config.from_pyfile(config_filepath, silent=True)
-    print_settings(photolog_app.config.items())
+    # print_settings(photolog_app.config.items())
 
     # 로그 초기화
     from photolog.photolog_logger import Log
@@ -40,7 +40,7 @@ def create_app(config_filepath='resource/config.cfg'):
     db_filepath = os.path.join(photolog_app.root_path,
                                photolog_app.config['DB_FILE_PATH'])
 
-    db_url = photolog_app.config['DB_URL'] + db_filepath
+    db_url = photolog_app.config['DB_URL']
     DBManager.init(db_url, eval(photolog_app.config['DB_LOG_FLAG']))
     DBManager.init_db()
 
@@ -52,5 +52,15 @@ def create_app(config_filepath='resource/config.cfg'):
     from photolog.controller import register_user
     from photolog.controller import twitter
 
-    
+    # SessionInterface 설정 Redis
+    from photolog.cache_session import SimpleCacheSessionInterface
+    photolog_app.session_interface = SimpleCacheSessionInterface()
 
+    # 공통적으로 적용할 HTTP 404, 500 에러 핸들러를 설정
+    photolog_app.error_handler_spec[None][404] = not_found
+    photolog_app.error_handler_spec[None][500] = server_error
+
+    # 페이징 처리를 위한 템플릿 함수
+    photolog_app.jinja_env.globals['url_for_other_page'] = url_foer_other_page
+
+    return photolog_app

@@ -11,7 +11,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from photolog.model import *
+# from photolog.model import *
 
 class DBManager:
     """데이터베이스 처리를 담당하는 공통 클래스"""
@@ -32,7 +32,8 @@ class DBManager:
 
     @staticmethod
     def init_db():
-        # from photolog.model import * # 사용을 금하고 있음 재앙의 씨앗
+        from photolog.model import user
+        from photolog.model import photo
         from photolog.model import Base
         Base.metadata.create_all(bind=DBManager.__engine)
 
